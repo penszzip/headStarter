@@ -5,7 +5,6 @@ import java.time.OffsetDateTime;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +22,8 @@ public class Project {
     private int fundingGoal;
     private int currentFunding;
     private OffsetDateTime deadline;
+
+    public Project() {}
 
     public Project(String name, String description, String author, int fundingGoal, int currentFunding, OffsetDateTime deadline) {
         this.name = name;
