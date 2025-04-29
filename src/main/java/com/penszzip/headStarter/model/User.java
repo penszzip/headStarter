@@ -1,7 +1,5 @@
 package com.penszzip.headStarter.model;
 
-import java.time.OffsetDateTime;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -11,16 +9,12 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Project {
+public class User {
     @Id
     @GeneratedValue
     private long id;
-    private String name;
-    private String description;
-    private String author;
-    private int fundingGoal;
-    private int currentFunding;
-    private OffsetDateTime deadline;
+    private String username;
+    private String password;
 
-    public Project() {}
+    public User() {}
 }
