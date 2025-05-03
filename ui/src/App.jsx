@@ -1,13 +1,16 @@
-import './App.css'
 import Home from './components/Home'
 import {
   BrowserRouter as Router,
   Routes, Route, Link
 } from 'react-router-dom'
+import NewProject from './components/NewProject'
+import Login from './components/Login'
+import SignUp from './components/SignUp'
 
 function App() {
 
-  const navlink = 'hover:text-indigo-500 transition duration-300 ease-in-out'
+  const navlink = 'hover:text-indigo-300 transition duration-300 ease-in-out'
+  const navButton = 'px-1.5 py-1 border rounded-md border-indigo-500 hover:bg-indigo-500 hover:border-indigo-500 hover:text-white transition duration-300 ease-in-out'
 
   return (
     <>
@@ -25,10 +28,10 @@ function App() {
         </div>
 
         <div className='flex space-x-4 font-medium'>
-          <Link className='px-1.5 py-1 border rounded-md border-gray-400 hover:bg-indigo-500 hover:border-indigo-500 hover:text-white transition duration-300 ease-in-out' to="/login">
+          <Link className={navButton} to="/login">
             Log in
           </Link>
-          {/* <Link to="/logout">Log out</Link> */}
+          <Link className={navButton} to="/signup">Sign up</Link>
         </div>
 
       </nav>
@@ -36,14 +39,12 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/projects/create" element={<Home />} />
-        <Route path="/login" element={<Home />} />
+        <Route path="/projects/create" element={<NewProject />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/logout" element={<Home />} />
-        <Route path="/projects/:id/contribute" element={<Home />} />
       </Routes>
     </Router>
-
-    
     </>
   )
 }
