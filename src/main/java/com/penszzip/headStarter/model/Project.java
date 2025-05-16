@@ -17,6 +17,7 @@ public class Project {
     private long id;
     private String name;
     private String description;
+    private String[] images;
     private String author;
     private int fundingGoal;
     private int currentFunding;

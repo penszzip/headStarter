@@ -18,7 +18,7 @@ function App() {
       <div className='bg-gray-100'>
       <nav className="flex items-center justify-between p-4 text-indigo-600 max-w-3/4 m-auto text-lg">
 
-        <div className="text-xl font-bold">
+        <div className="text-3xl font-bold">
           HeadStarter
         </div>
 
