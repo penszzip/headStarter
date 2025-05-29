@@ -2,7 +2,7 @@ package com.penszzip.headStarter.dto;
 
 import java.time.OffsetDateTime;
 
-public class ProjectUpdateForm {
+public class ProjectDTO {
     private String name;
     private String description;
     private String author;
