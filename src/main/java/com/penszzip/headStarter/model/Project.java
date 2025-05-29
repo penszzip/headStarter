@@ -1,6 +1,7 @@
 package com.penszzip.headStarter.model;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +18,7 @@ public class Project {
     private long id;
     private String name;
     private String description;
-    private String[] images;
+    private List<String> images;
     private String author;
     private int fundingGoal;
     private int currentFunding;

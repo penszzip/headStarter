@@ -2,6 +2,8 @@ package com.penszzip.headStarter.service;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,23 +38,23 @@ public class S3Service {
             .build();
     }
 
-    public String uploadFile(MultipartFile image, String name) throws IOException { 
+    public List<String> uploadFile(List<MultipartFile> images, String name) throws IOException { 
         try {
             AmazonS3 s3Client = getS3Client();
+            List<String> urlList = new ArrayList<>();
 
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(image.getSize());
-            metadata.setContentType(image.getContentType());
-            
+            for (MultipartFile image : images) {
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentLength(image.getSize());
+                metadata.setContentType(image.getContentType());
+        
+                String imageId = name + "-" + UUID.randomUUID().toString(); // use project name and uuid as a key
 
-            String imageId = name + "-" + UUID.randomUUID().toString(); // use project name and uuid as a key
-
-            PutObjectRequest request = new PutObjectRequest(BUCKET_NAME, imageId, image.getInputStream(), metadata);
-
-            s3Client.putObject(request);
-            
-            return s3Client.getUrl(BUCKET_NAME, imageId).toString();
-
+                PutObjectRequest request = new PutObjectRequest(BUCKET_NAME, imageId, image.getInputStream(), metadata);
+                s3Client.putObject(request);
+                urlList.add(s3Client.getUrl(BUCKET_NAME, imageId).toString());
+            }
+            return urlList;
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
             throw e;

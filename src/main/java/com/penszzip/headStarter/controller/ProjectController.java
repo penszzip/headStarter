@@ -1,10 +1,13 @@
 package com.penszzip.headStarter.controller;
 
 import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,8 +18,10 @@ import com.penszzip.headStarter.repository.ProjectRepository;
 import com.penszzip.headStarter.service.S3Service;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.penszzip.headStarter.dto.ProjectUpdateForm;
 import com.penszzip.headStarter.model.Project;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,6 +52,7 @@ public class ProjectController {
 
     @PostMapping("/projects")
     public ResponseEntity<Project> createProject(@RequestBody Project project) {
+        // TODO: Refactor to use multipart/form-data
         // do upload file for each file and then create 
         Project newProject = projectRepository.save(project);
         return new ResponseEntity<>(newProject, HttpStatus.CREATED);
@@ -61,30 +67,49 @@ public class ProjectController {
     }
     
     @PutMapping("/projects/{id}")
-    public ResponseEntity<Project> updateProject(@PathVariable long id, @RequestBody Project newProject) {
+    public ResponseEntity<Project> updateProject(@PathVariable long id, 
+        @ModelAttribute ProjectUpdateForm projectUpdateFormData,
+        @RequestPart("images") List<MultipartFile> images) {
+
         Optional<Project> foundProject = projectRepository.findById(id);
 
-        return foundProject.map(project -> {
-            project.setName(newProject.getName());
-            project.setDescription(newProject.getDescription());
-            project.setAuthor(newProject.getAuthor());
-            project.setFundingGoal(newProject.getFundingGoal());
-            project.setCurrentFunding(newProject.getCurrentFunding());
-            project.setDeadline(newProject.getDeadline());
+        try {
+            List<String> urls = s3Service.uploadFile(images, projectUpdateFormData.getName());
 
-            Project savedProject = projectRepository.save(project);
-            return new ResponseEntity<>(savedProject, HttpStatus.OK);
+            return foundProject.map(project -> {
+                project.setName(projectUpdateFormData.getName());
+                project.setDescription(projectUpdateFormData.getDescription());
+                project.setAuthor(projectUpdateFormData.getAuthor());
+                project.setFundingGoal(projectUpdateFormData.getFundingGoalAsInt());
+                project.setCurrentFunding(projectUpdateFormData.getCurrentFundingAsInt());
+                project.setDeadline(projectUpdateFormData.getDeadlineAsDate());
+
+                List<String> newUrlList = project.getImages() == null ? new ArrayList<>() : project.getImages();
+                for (String url : urls) {
+                    newUrlList.add(url);
+                }
+                project.setImages(newUrlList);
+
+                Project savedProject = projectRepository.save(project);
+                return new ResponseEntity<>(savedProject, HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IOException exception) {
+            System.out.println(exception.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/projects/images/upload")
-    public ResponseEntity<String> upload(@RequestPart MultipartFile image, @RequestParam String name) {
+    public ResponseEntity<List<String>> upload(@RequestPart List<MultipartFile> images, @RequestParam String projectName) {
         try {
             // upload files to s3, return url for each image
             // return array of urls
             // put array of urls onto payload to post call in the frontend
-            String url = s3Service.uploadFile(image, name);
-            return new ResponseEntity<>(url, HttpStatus.OK);
+            List<String> urlList = s3Service.uploadFile(images, projectName);
+            return new ResponseEntity<>(urlList, HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IOException e) {
