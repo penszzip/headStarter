@@ -108,24 +108,7 @@ public class ProjectController {
             System.out.println(exception.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @PostMapping("/projects/images/upload")
-    public ResponseEntity<List<String>> upload(@RequestPart List<MultipartFile> images, @RequestParam String projectName) {
-        try {
-            // upload files to s3, return url for each image
-            // return array of urls
-            // put array of urls onto payload to post call in the frontend
-            List<String> urlList = s3Service.uploadFile(images, projectName);
-            return new ResponseEntity<>(urlList, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (IOException e) {
-            System.out.println("Couldn't handle file upload: " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    
+    }    
 
     @DeleteMapping("/projects/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable long id) {
