@@ -87,12 +87,15 @@ public class ProjectController {
         Optional<Project> foundProject = projectRepository.findById(id);
 
         try {
-            List<String> urls = s3Service.uploadFile(images, projectUpdateFormData.getName());
+            String projectName = projectUpdateFormData.getName();
+            List<String> urls = s3Service.uploadFile(images, projectName);
 
             return foundProject.map(project -> {
                 ProjectMapper.mapProjectDTOtoProject(project, projectUpdateFormData);
 
+                // Get existing image urls
                 List<String> newUrlList = project.getImages() == null ? new ArrayList<>() : project.getImages();
+                // Add new uploaded images urls and add to existing urls list
                 for (String url : urls) {
                     newUrlList.add(url);
                 }
