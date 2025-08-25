@@ -2,6 +2,8 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Contribute from './Contribute'
+import { Carousel } from 'react-responsive-carousel'
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // Import carousel styles
 
 function Projects() {
 
@@ -23,9 +25,32 @@ function Projects() {
 		<div>
 			<div className="max-w-1/2 m-auto min-h-screen p-6 mt-12">
 				<h1 className="text-3xl text-left text-gray-700 mb-10">Explore the Projects</h1>
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-20">
+				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-20">
 					{projects.map(project => (
 						<div key={project.id} className="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between">
+							{/* Image Carousel */}
+							{project.images && project.images.length > 0 && (
+								<div className="mb-4">
+								<Carousel 
+									showArrows={true}
+									showStatus={false}
+									showThumbs={false}
+									infiniteLoop={true}
+									autoPlay={false}
+									className="rounded-lg overflow-hidden"
+								>
+									{project.images.map((imageUrl, index) => (
+									<div key={index}>
+										<img 
+										src={imageUrl} 
+										alt={`${project.name} - image ${index + 1}`} 
+										className="h-96 w-full object-cover"
+										/>
+									</div>
+									))}
+								</Carousel>
+								</div>
+							)}
 							<div>
 								<h2 className="text-xl font-semibold text-indigo-700">{project.name}</h2>
 								<p className="text-gray-600 mt-2">{project.description}</p>

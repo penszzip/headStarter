@@ -86,6 +86,11 @@ public class ProjectController {
 
         Optional<Project> foundProject = projectRepository.findById(id);
 
+        // Check if project exists
+        if (foundProject.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         try {
             String projectName = projectUpdateFormData.getName();
             List<String> urls = s3Service.uploadFile(images, projectName);
@@ -115,6 +120,14 @@ public class ProjectController {
 
     @DeleteMapping("/projects/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable long id) {
+
+        Optional<Project> foundProject = projectRepository.findById(id);
+
+        // Check if project exists
+        if (foundProject.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         projectRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

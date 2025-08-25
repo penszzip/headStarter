@@ -5,11 +5,23 @@ import com.penszzip.headStarter.model.Project;
 
 public class ProjectMapper {
     public static void mapProjectDTOtoProject(Project project, ProjectDTO projectDTO) {
-        project.setName(projectDTO.getName());
-        project.setDescription(projectDTO.getDescription());
-        project.setAuthor(projectDTO.getAuthor());
-        project.setFundingGoal(projectDTO.getFundingGoalAsInt());
-        project.setCurrentFunding(projectDTO.getCurrentFundingAsInt());
-        project.setDeadline(projectDTO.getDeadlineAsDate());
+        if (projectDTO.getName() != null) {
+            project.setName(projectDTO.getName());
+        }
+        if (projectDTO.getDescription() != null) {
+            project.setDescription(projectDTO.getDescription());
+        }
+        if (projectDTO.getAuthor() != null) {
+            project.setAuthor(projectDTO.getAuthor());
+        }
+        if (projectDTO.getFundingGoal() != null) {
+            project.setFundingGoal(projectDTO.getFundingGoalAsInt());
+        }
+        if (projectDTO.getCurrentFunding() != null) {
+            project.setCurrentFunding(projectDTO.getCurrentFundingAsInt());
+        }
+        if (projectDTO.getDeadline() != null) {
+            project.setDeadline(projectDTO.getDeadlineAsDate());
+        }
     }
 }
