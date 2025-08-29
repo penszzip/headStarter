@@ -6,6 +6,8 @@ import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +21,11 @@ public class Project {
     private String name;
     private String description;
     private List<String> images;
-    private String author;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user; // author of the project
+
     private int fundingGoal;
     private int currentFunding;
     private OffsetDateTime deadline;
