@@ -11,9 +11,6 @@ public class ProjectMapper {
         if (projectDTO.getDescription() != null) {
             project.setDescription(projectDTO.getDescription());
         }
-        if (projectDTO.getAuthor() != null) {
-            project.setAuthor(projectDTO.getAuthor());
-        }
         if (projectDTO.getFundingGoal() != null) {
             project.setFundingGoal(projectDTO.getFundingGoalAsInt());
         }
