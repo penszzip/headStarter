@@ -1,4 +1,4 @@
-package com.penszzip.headStarter.utils;
+package com.penszzip.headStarter.jwt;
 
 import java.util.Date;
 import java.util.HashMap;
