@@ -25,13 +25,14 @@ import com.penszzip.headStarter.model.Project;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 
 
 
 @RestController
 @CrossOrigin(origins = "*")
+@RequestMapping("/projects")
 public class ProjectController {
 
     ProjectRepository projectRepository;
@@ -42,13 +43,13 @@ public class ProjectController {
         this.s3Service = s3Service;
     }
 
-    @GetMapping("/projects")
+    @GetMapping("/")
     public ResponseEntity<List<Project>> getProjects() {
         List<Project> projects = projectRepository.findAll();
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
-    @PostMapping("/projects")
+    @PostMapping("/")
     public ResponseEntity<Project> createProject(@ModelAttribute ProjectDTO newProject,
         @RequestPart("images") List<MultipartFile> images) {
         try {
@@ -71,7 +72,7 @@ public class ProjectController {
         
     }
     
-    @GetMapping("/projects/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Project> getProject(@PathVariable long id) {
         Optional<Project> foundProject = projectRepository.findById(id);
         
@@ -79,7 +80,7 @@ public class ProjectController {
             .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     
-    @PutMapping("/projects/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable long id, 
         @ModelAttribute ProjectDTO projectUpdateFormData,
         @RequestPart("images") List<MultipartFile> images) {
@@ -118,7 +119,7 @@ public class ProjectController {
         }
     }    
 
-    @DeleteMapping("/projects/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable long id) {
 
         Optional<Project> foundProject = projectRepository.findById(id);
