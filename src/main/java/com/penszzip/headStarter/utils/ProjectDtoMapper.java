@@ -3,7 +3,7 @@ package com.penszzip.headStarter.utils;
 import com.penszzip.headStarter.dto.ProjectDTO;
 import com.penszzip.headStarter.model.Project;
 
-public class ProjectMapper {
+public class ProjectDtoMapper {
     public static void mapProjectDTOtoProject(Project project, ProjectDTO projectDTO) {
         if (projectDTO.getName() != null) {
             project.setName(projectDTO.getName());
