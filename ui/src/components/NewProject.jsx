@@ -35,6 +35,7 @@ function NewProject() {
       const response = await axios.post('http://localhost:8080/projects', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          // Get the token from localStorage and use that in the request headers
         },
       });
       console.log('Project created successfully:', response.data);
