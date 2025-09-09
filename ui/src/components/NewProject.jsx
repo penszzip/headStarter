@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function NewProject() {
@@ -9,7 +10,9 @@ function NewProject() {
     fundingGoal: '',
     deadline: '',
   });
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState(null);
+  const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -17,28 +20,43 @@ function NewProject() {
   };
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    console.dir(e.target);
+    setFiles(e.target.files);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data = new FormData();
-    data.append('file', file);
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        data.append('images', files[i])
+      }
+    }
+
+    let deadlineWithTimezone = formData.deadline;
+    if (deadlineWithTimezone && !deadlineWithTimezone.includes('Z') && 
+        !deadlineWithTimezone.includes('+')) {
+      deadlineWithTimezone = deadlineWithTimezone + ":00Z";
+    }
+
     data.append('name', formData.name);
     data.append('description', formData.description);
-    data.append('author', formData.author);
     data.append('fundingGoal', formData.fundingGoal);
-    data.append('deadline', formData.deadline);
+    data.append('deadline', deadlineWithTimezone);
 
     try {
+      console.dir(formData)
+      console.dir(data)
       const response = await axios.post('http://localhost:8080/projects', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           // Get the token from localStorage and use that in the request headers
+          'Authorization': 'Bearer ' + token,
         },
       });
       console.log('Project created successfully:', response.data);
+      navigate('/');
     } catch (error) {
       console.error('Error creating project:', error);
     }
@@ -70,17 +88,6 @@ function NewProject() {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 font-medium mb-2">Author</label>
-          <input
-            type="text"
-            name="author"
-            value={formData.author}
-            onChange={handleInputChange}
-            className="w-full border border-gray-300 rounded-md p-2"
-            required
-          />
-        </div>
-        <div className="mb-4">
           <label className="block text-gray-700 font-medium mb-2">Funding Goal ($)</label>
           <input
             type="number"
@@ -106,6 +113,7 @@ function NewProject() {
           <label className="block text-gray-700 font-medium mb-2">Upload Image</label>
           <input
             type="file"
+            multiple
             onChange={handleFileChange}
             className="w-full border border-gray-300 rounded-md p-2"
             required

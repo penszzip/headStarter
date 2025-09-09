@@ -48,6 +48,7 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 // Validate the token
+                // TODO: Handle token expiration: currently sends a 403 on any request
                 if (jwtUtil.validateToken(jwt, userDetails)) {
                     // Create authentication token
                     UsernamePasswordAuthenticationToken authToken = 

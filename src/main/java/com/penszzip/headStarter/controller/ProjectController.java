@@ -83,7 +83,7 @@ public class ProjectController {
             System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getCause());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
