@@ -12,10 +12,10 @@ public class ProjectDtoMapper {
             project.setDescription(projectDTO.getDescription());
         }
         if (projectDTO.getFundingGoal() != null) {
-            project.setFundingGoal(projectDTO.getFundingGoalAsInt());
+            project.setFundingGoal(projectDTO.getFundingGoal());
         }
         if (projectDTO.getCurrentFunding() != null) {
-            project.setCurrentFunding(projectDTO.getCurrentFundingAsInt());
+            project.setCurrentFunding(projectDTO.getCurrentFunding());
         }
         if (projectDTO.getDeadline() != null) {
             project.setDeadline(projectDTO.getDeadlineAsDate());

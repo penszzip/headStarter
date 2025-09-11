@@ -4,14 +4,17 @@ import axios from 'axios'
 import Contribute from './Contribute'
 import { Carousel } from 'react-responsive-carousel'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // Import carousel styles
+import { useNavigate } from 'react-router-dom'
 
 function Projects() {
 
 	const [projects, setProjects] = useState([])
-	const [isVisible, setIsVisible] = useState(false)
 	const [selectedProject, setSelectedProject] = useState(null);
+	const navigate = useNavigate();
 
-	const onClose = () => setIsVisible(false)
+	const onClose = () => setIsVisible(false);
+
+	const redirect = () => navigate('/contribute');
 
 	useEffect(() => {
 		axios.get('http://localhost:8080/projects')
@@ -23,11 +26,12 @@ function Projects() {
 
 	return (
 		<div>
-			<div className="max-w-1/2 m-auto min-h-screen p-6 mt-12">
+			<div className="max-w-1/2 m-auto min-h-screen p-6 mt-11">
 				<h1 className="text-3xl text-left text-gray-700 mb-10">Explore the Projects</h1>
 				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-20">
 					{projects.map(project => (
-						<div key={project.id} className="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between">
+						<div key={project.id} className="bg-white shadow-md rounded-lg p-4 flex flex-col justify-between hover:bg-gray-100 transition cursor-pointer" 
+							onClick={() => navigate(`/contribute/${project.id}`, { state: { project } })}>
 							{/* Image Carousel */}
 							{project.images && project.images.length > 0 && (
 								<div className="mb-4">
@@ -59,12 +63,6 @@ function Projects() {
 								<p className="text-sm text-gray-500 mt-4">Author: {project.author}</p>
 								<p className="text-sm text-gray-500">Funding Goal: ${project.fundingGoal}</p>
 								<p className="text-sm text-gray-500 mb-8">Current Funding: ${project.currentFunding}</p>
-							</div>
-							<div>
-								<span className="p-2 border rounded-md border-indigo-500 bg-indigo-500 text-white cursor-pointer font-semibold hover:bg-gray-100 hover:text-indigo-500 transition duration-300 ease-in-out"
-									onClick={() => setSelectedProject(project)}>
-									Contribute
-								</span>
 							</div>
 						</div>
 					))}

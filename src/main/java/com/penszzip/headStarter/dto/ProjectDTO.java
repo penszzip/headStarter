@@ -5,8 +5,8 @@ import java.time.OffsetDateTime;
 public class ProjectDTO {
     private String name;
     private String description;
-    private String fundingGoal;
-    private String currentFunding;
+    private Double fundingGoal;
+    private Double currentFunding;
     private String deadline;
 
     public String getName() {
@@ -17,11 +17,11 @@ public class ProjectDTO {
         return this.description;
     }
 
-    public String getFundingGoal() {
+    public Double getFundingGoal() {
         return this.fundingGoal;
     }
 
-    public String getCurrentFunding() {
+    public Double getCurrentFunding() {
         return this.currentFunding;
     }
 
@@ -37,24 +37,16 @@ public class ProjectDTO {
         this.description = description;
     }
 
-    public void setFundingGoal(String fundingGoal) {
+    public void setFundingGoal(Double fundingGoal) {
         this.fundingGoal = fundingGoal;
     }
 
-    public void setCurrentFunding(String currentFunding) {
+    public void setCurrentFunding(Double currentFunding) {
         this.currentFunding = currentFunding;
     }
 
     public void setDeadline(String deadline) {
         this.deadline = deadline;
-    }
-
-    public int getFundingGoalAsInt() {
-        return Integer.parseInt(this.fundingGoal);
-    }
-
-    public int getCurrentFundingAsInt() {
-        return Integer.parseInt(this.currentFunding);
     }
 
     public OffsetDateTime getDeadlineAsDate() {

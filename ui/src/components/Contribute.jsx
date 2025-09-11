@@ -1,58 +1,126 @@
 import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
-function Contribute({ project, onClose }) {
+// function Contribute({ project, onClose }) {
+function Contribute() {
+
+	const { projectId } = useParams();
+	const location = useLocation();
+	const navigate = useNavigate();
+	const token = localStorage.getItem('token');
+
+	const [project, setProject] = useState(location.state?.project || null);
 	const [amount, setAmount] = useState(0);
-
-	const handleContribute = () => {
-		onContribute(amount);
-		onClose();
-	};
+	const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+	const [loading, setLoading] = useState(!project);
+	const [submitting, setSubmitting] = useState(false);
 
 	useEffect(() => {
-    document.body.style.overflow = 'hidden'; // Disable scrolling
-    return () => {
-      document.body.style.overflow = 'auto'; // Re-enable scrolling when the component unmounts
-    };
-  }, []);
+		setLoading(true);
+		axios.get(`http://localhost:8080/projects/${projectId}`)
+		.then(response => {
+			setProject(response.data);
+			setLoading(false);
+		})
+		.catch(error => {
+			console.error('Error fetching project:', error);
+			setLoading(false);
+		});
+	}, [project, projectId]);
+
+	const handleContribute = () => {
+		if (amount <= 0) {
+			alert("Please enter a valid amount");
+			return;
+		}
+		
+		if (!name.trim()) {
+			alert("Please enter your name");
+			return;
+		}
+		
+		if (!email.trim() || !email.includes('@')) {
+			alert("Please enter a valid email");
+			return;
+		}
+
+		setSubmitting(true);
+		initiatePayment();
+	};
+
+	const initiatePayment = async () => {
+		try {
+			// Send checkout request to backend
+			console.log(token);
+			const response = await axios.post("http://localhost:8080/checkout/hosted", {
+				projectId: parseInt(projectId),
+				amount: parseInt(amount),
+				customerName: name,
+				customerEmail: email,
+			}, { headers: {
+          		// Get the token from localStorage and use that in the request headers
+          		'Authorization': 'Bearer ' + token,
+        	}});
+			// Redirect to stripe if successful
+			window.location.href = response.data.url;
+		} catch (error) {
+			console.error('Error creating checkout session:', error);
+			alert('Something went wrong. Please try again.');
+			setSubmitting(false);
+		}
+
+    }
 
 	return (
-		<div className="fixed inset-0 flex items-center justify-center z-50">
-			
-			<div
-				className="absolute inset-0 bg-black opacity-50"
-				onClick={onClose} // Close the overlay when clicking outside the modal
-			></div>
-
-			<div className="relative bg-white rounded-lg shadow-lg p-6 w-96">
-				<h2 className="text-xl font-semibold text-indigo-700 mb-4">
-					Contribute to {project.name}
-				</h2>
-				<p className="text-gray-600 mb-6">{project.description}</p>
-				<label className="block text-gray-700 font-medium mb-2">
-					Choose an amount:
-				</label>
-				<input
-					type="range"
-					min="1"
-					max={100}
-					value={amount}
-					onChange={(e) => setAmount(e.target.value)}
-					className="w-full"
-				/>
-				<p className="text-gray-700 mt-2">Amount: ${amount}</p>
-				<div className="flex justify-end mt-6 space-x-4">
-					<button
-						onClick={onClose}
-						className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition"
-					>
-						Cancel
-					</button>
-					<button
-						className="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition"
-					>
-						Contribute
-					</button>
-				</div>
+		<div className="w-full max-w-md mx-auto mt-40 p-6 bg-white rounded-lg shadow-md">
+			<h2 className="text-2xl font-semibold text-indigo-700 mb-4">
+				Contribute to {project.name}
+			</h2>
+			<label className="block text-gray-700 font-medium mb-2">
+				Name:
+			</label>
+			<input
+				type="text"
+				value={name}
+				onChange={(e) => setName(e.target.value)}
+				className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500 mb-2"
+			/>
+			<label className="block text-gray-700 font-medium mb-2">
+				Email:
+			</label>
+			<input
+				type="text"
+				value={email}
+				onChange={(e) => setEmail(e.target.value)}
+				className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500 mb-2"
+			/>
+			<label className="block text-gray-700 font-medium mb-2">
+				Choose an amount:
+			</label>
+			<input
+				type="range"
+				min="1"
+				max={100}
+				value={amount}
+				onChange={(e) => setAmount(e.target.value)}
+				className="w-full"
+			/>
+			<p className="text-gray-700 mt-2">Amount: ${amount}</p>
+			<div className="flex justify-end mt-6 space-x-4">
+				<button
+					// onClick={onClose}
+					className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 transition"
+				>
+					Cancel
+				</button>
+				<button
+					className={`px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition ${submitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+					onClick={handleContribute} disabled={submitting}
+				>
+					{submitting ? 'Processing...' : 'Contribute'}
+				</button>
 			</div>
 		</div>
 	);

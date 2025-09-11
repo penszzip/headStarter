@@ -1,13 +1,16 @@
 import Home from './components/Home'
 import {
   BrowserRouter as Router,
-  Routes, Route, Link
+  Routes, Route, Link, Navigate
 } from 'react-router-dom'
 import NewProject from './components/NewProject'
 import Login from './components/Login'
 import SignUp from './components/SignUp'
 import { AuthProvider, AuthContext } from './context/AuthContext'
 import { useContext } from 'react'
+import Contribute from './components/Contribute'
+import Success from './components/Success'
+import Failure from './components/Failure'
 
 // Protected route component
 const ProtectedRoute = ({ children }) => {
@@ -75,6 +78,10 @@ function AppContent() {
         } />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/contribute/:projectId" element={<Contribute />} />
+        <Route path="/success" element={<Success />} />
+        <Route path="/failure" element={<Failure />} />
+
       </Routes>
     </Router>
     </>

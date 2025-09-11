@@ -26,8 +26,8 @@ public class Project {
     @JoinColumn(name = "user_id")
     private User user; // author of the project
 
-    private int fundingGoal;
-    private int currentFunding;
+    private Double fundingGoal;
+    private Double currentFunding;
     private OffsetDateTime deadline;
 
     public Project() {}

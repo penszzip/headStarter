@@ -14,7 +14,7 @@ public class ProjectResponseDTO {
     private String description;
     private List<String> images;
     private String user;
-    private int fundingGoal;
-    private int currentFunding;
+    private Double fundingGoal;
+    private Double currentFunding;
     private OffsetDateTime deadline;
 }
