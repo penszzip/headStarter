@@ -14,8 +14,6 @@ function Projects() {
 
 	const onClose = () => setIsVisible(false);
 
-	const redirect = () => navigate('/contribute');
-
 	useEffect(() => {
 		axios.get('http://localhost:8080/projects')
 			.then(response => {

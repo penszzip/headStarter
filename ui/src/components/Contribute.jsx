@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 
 // function Contribute({ project, onClose }) {
@@ -16,8 +17,12 @@ function Contribute() {
     const [email, setEmail] = useState("");
 	const [loading, setLoading] = useState(!project);
 	const [submitting, setSubmitting] = useState(false);
+	const { isAuthenticated } = useContext(AuthContext);
 
 	useEffect(() => {
+		if (!isAuthenticated) {
+			navigate('/login');
+  		}
 		setLoading(true);
 		axios.get(`http://localhost:8080/projects/${projectId}`)
 		.then(response => {
@@ -70,7 +75,6 @@ function Contribute() {
 			alert('Something went wrong. Please try again.');
 			setSubmitting(false);
 		}
-
     }
 
 	return (

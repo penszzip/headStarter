@@ -36,7 +36,6 @@ public class WebhookController {
             // Handle the event based on type
             if ("checkout.session.completed".equals(event.getType())) {
                 EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
-                
                 if (dataObjectDeserializer.getObject().isPresent()) {
                     Session session = (Session) dataObjectDeserializer.getObject().get();
                     handleSuccessfulPayment(session);
