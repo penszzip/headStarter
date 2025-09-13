@@ -55,7 +55,7 @@ function Projects() {
 							)}
 							<div>
 								<h2 className="text-xl font-semibold text-indigo-700">{project.name}</h2>
-								<p className="text-gray-600 mt-2">{project.description}</p>
+								<p className="text-gray-600 mt-2 h-24 overflow-hidden line-clamp-4">{project.description}</p>
 							</div>
 							<div>
 								<p className="text-sm text-gray-500 mt-4">Author: {project.author}</p>
