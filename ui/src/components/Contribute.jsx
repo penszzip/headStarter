@@ -78,7 +78,7 @@ function Contribute() {
     }
 
 	return (
-		<div className="w-full max-w-md mx-auto mt-40 p-6 bg-white rounded-lg shadow-md">
+		<div className="w-full max-w-md mx-auto mt-30 p-6 bg-white rounded-lg shadow-md">
 			<h2 className="text-2xl font-semibold text-indigo-700 mb-4">
 				Contribute to {project.name}
 			</h2>

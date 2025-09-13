@@ -63,7 +63,7 @@ function NewProject() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-md">
+    <div className="max-w-2xl mx-auto p-6 mt-15 bg-white shadow-md rounded-md">
       <h1 className="text-2xl font-bold text-gray-700 mb-4">Create a New Project</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
